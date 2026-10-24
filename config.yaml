@@ -1,0 +1,57 @@
+# One entry per office app. Fill in path/db/iis details for each
+# environment by pointing DATABASE_URL (in that app's own .env file) at
+# the right SQL Server before running setup_database.py, and by running
+# setup_iis.ps1 once per environment with -Environment Dev|UAT|Prod.
+#
+# db_module: the Python import path to that app's Flask entrypoint module
+#   (the one that has a module-level `app` object), OR, for an app that
+#   doesn't use Flask-SQLAlchemy (see HealthCheckPlatform), the raw-mode
+#   settings below instead.
+# schema_name: must match the SQLSERVER_SCHEMA constant in that app's own
+#   db.py / db/repository.py -- kept here too so this script never has to
+#   import that constant, just the db object.
+
+projects:
+  - name: ticket_tracker
+    path: D:\Claude\ticket_tracker
+    db_module: app
+    schema_name: ticket_tracker
+    iis:
+      site_name: TicketTracker
+      port: 8081
+      app_pool: TicketTrackerPool
+      service_account: ""     # e.g. CORP\svc_tickettracker
+      venv_path: ""           # e.g. D:\Claude\ticket_tracker\venv
+
+  - name: IRR-Log-Analyser
+    path: D:\Claude\IRR-Log-Analyser
+    db_module: app
+    schema_name: IRRLogAnalyser
+    iis:
+      site_name: IRRLogAnalyser
+      port: 8082
+      app_pool: IRRLogAnalyserPool
+      service_account: ""
+      venv_path: ""
+
+  - name: BatchHealthAnalyzer
+    path: D:\Claude\BatchHealthAnalyzer
+    db_module: main
+    schema_name: batch_health_analyzer
+    iis:
+      site_name: BatchHealthAnalyzer
+      port: 8083
+      app_pool: BatchHealthAnalyzerPool
+      service_account: ""
+      venv_path: ""
+
+  - name: HealthCheckPlatform
+    path: D:\Claude\HealthCheckPlatform
+    db_module: raw:db.repository:init_db   # no Flask app object -- calls this function directly instead
+    schema_name: healthcheck
+    iis:
+      site_name: HealthCheckPlatform
+      port: 8084
+      app_pool: HealthCheckPlatformPool
+      service_account: ""
+      venv_path: ""
