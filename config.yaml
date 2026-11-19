@@ -47,7 +47,7 @@ projects:
 
   - name: HealthCheckPlatform
     path: D:\Claude\HealthCheckPlatform
-    db_module: raw:db.repository:init_db   # no Flask app object -- calls this function directly instead
+    db_module: app
     schema_name: healthcheck
     iis:
       site_name: HealthCheckPlatform
